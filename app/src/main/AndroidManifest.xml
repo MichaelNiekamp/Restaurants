@@ -16,7 +16,7 @@
         android:theme="@style/Theme.Restaurants"
         tools:targetApi="31">
         <activity
-            android:name="com.example.restaurants.MainActivity"
+            android:name="com.example.restaurants.restaurant.presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Restaurants">
             <intent-filter>

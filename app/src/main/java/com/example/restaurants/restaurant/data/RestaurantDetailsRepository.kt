@@ -1,5 +1,7 @@
-package com.example.restaurants
+package com.example.restaurants.restaurant.data
 
+import com.example.restaurants.restaurant.data.remote.RestaurantsApiService
+import com.example.restaurants.restaurant.domain.Restaurant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
@@ -15,7 +17,14 @@ class RestaurantDetailsRepository {
     suspend fun getRemoteRestaurant(id: Int): Restaurant {
         return withContext(Dispatchers.IO){
             val responseMap = restInterface.getRestaurant(id)
-            return@withContext responseMap.values.first()
+            return@withContext responseMap.values.first().let {
+                Restaurant(
+                    id = it.id,
+                    title = it.title,
+                    description = it.description,
+                    isFavorite = false
+                )
+            }
         }
     }
 }

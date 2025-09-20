@@ -1,15 +1,15 @@
-package com.example.restaurants
+package com.example.restaurants.restaurant.presentation.details
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.restaurants.restaurant.data.RestaurantDetailsRepository
+import com.example.restaurants.restaurant.domain.Restaurant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 
 class RestaurantDetailsViewModel(private val stateHandle: SavedStateHandle): ViewModel() {
