@@ -8,6 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -18,8 +19,10 @@ import com.example.restaurants.restaurant.presentation.details.RestaurantDetails
 import com.example.restaurants.restaurant.presentation.list.RestaurantsScreen
 import com.example.restaurants.restaurant.presentation.list.RestaurantsViewModel
 import com.example.restaurants.ui.theme.RestaurantsTheme
+import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +46,7 @@ private fun RestaurantApp() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "restaurants") {
         composable("restaurants") {
-            val viewModel: RestaurantsViewModel = viewModel()
+            val viewModel: RestaurantsViewModel = hiltViewModel()
             RestaurantsScreen(
                 state = viewModel.state.value,
                 onItemClick = { id ->

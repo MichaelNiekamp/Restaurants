@@ -2,13 +2,15 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
-    // Kotlin 2.0+ Compose compiler plugin – no need for composeOptions.kotlinCompilerExtensionVersion
+    alias(libs.plugins.hilt.android)
     alias(libs.plugins.compose.compiler)
 }
 
 android {
     namespace = "com.niekamp"
     compileSdk = 34
+    // performance: enable aggregating task for faster builds
+    hilt { enableAggregatingTask = true }
 
     defaultConfig {
         applicationId = "com.niekamp"
@@ -52,6 +54,9 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
     // Compose BOM (controls versions for all compose artifacts below)
     implementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(platform(libs.androidx.compose.bom))

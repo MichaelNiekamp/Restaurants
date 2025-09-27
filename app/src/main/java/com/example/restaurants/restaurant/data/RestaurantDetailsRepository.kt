@@ -6,13 +6,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RestaurantDetailsRepository {
-    private var restInterface: RestaurantsApiService = Retrofit.Builder()
-        .addConverterFactory(GsonConverterFactory.create())
-        .baseUrl("https://restaraunt-462ea-default-rtdb.firebaseio.com/")
-        .build()
-        .create(RestaurantsApiService::class.java)
+@Singleton
+class RestaurantDetailsRepository @Inject constructor(
+    private val restInterface: RestaurantsApiService
+){
+//    private var restInterface: RestaurantsApiService = Retrofit.Builder()
+//        .addConverterFactory(GsonConverterFactory.create())
+//        .baseUrl("https://restaraunt-462ea-default-rtdb.firebaseio.com/")
+//        .build()
+//        .create(RestaurantsApiService::class.java)
 
     suspend fun getRemoteRestaurant(id: Int): Restaurant {
         return withContext(Dispatchers.IO){

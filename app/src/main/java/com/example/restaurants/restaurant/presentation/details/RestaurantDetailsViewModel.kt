@@ -7,17 +7,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.restaurants.restaurant.data.RestaurantDetailsRepository
 import com.example.restaurants.restaurant.domain.Restaurant
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Inject
 
-class RestaurantDetailsViewModel(private val stateHandle: SavedStateHandle): ViewModel() {
+@HiltViewModel
+class RestaurantDetailsViewModel @Inject constructor(
+    private val stateHandle: SavedStateHandle,
+    private val repository: RestaurantDetailsRepository
+): ViewModel() {
     private val _state = mutableStateOf<Restaurant?>(null)
     val state: State<Restaurant?>
         get() = _state
-
-    private val repository = RestaurantDetailsRepository()
 
     init {
         val id = stateHandle.get<Int>("restaurant_id") ?: 0

@@ -6,17 +6,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.restaurants.restaurant.domain.GetInitialRestaurantsUseCase
 import com.example.restaurants.restaurant.domain.ToggleRestaurantUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import javax.inject.Inject
 
 
-class RestaurantsViewModel() : ViewModel() {
-    private val getRestaurantsUseCase = GetInitialRestaurantsUseCase()
-    private val toggleRestaurantUseCase = ToggleRestaurantUseCase()
-
+@HiltViewModel
+class RestaurantsViewModel @Inject constructor(
+    private val getRestaurantsUseCase: GetInitialRestaurantsUseCase,
+    private val toggleRestaurantUseCase: ToggleRestaurantUseCase
+) : ViewModel() {
     private val _state = mutableStateOf(
         RestaurantScreenState(
         restaurants = listOf(),
