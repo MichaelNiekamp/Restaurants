@@ -4,9 +4,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.restaurants.restaurant.data.di.MainDispatcher
 import com.example.restaurants.restaurant.domain.GetInitialRestaurantsUseCase
 import com.example.restaurants.restaurant.domain.ToggleRestaurantUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RestaurantsViewModel @Inject constructor(
     private val getRestaurantsUseCase: GetInitialRestaurantsUseCase,
-    private val toggleRestaurantUseCase: ToggleRestaurantUseCase
+    private val toggleRestaurantUseCase: ToggleRestaurantUseCase,
+    @MainDispatcher private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private val _state = mutableStateOf(
         RestaurantScreenState(
@@ -48,7 +51,7 @@ class RestaurantsViewModel @Inject constructor(
     }
 
     private fun getRestaurants() {
-        viewModelScope.launch(handler) {
+        viewModelScope.launch(handler + dispatcher) {
             val restaurants = getRestaurantsUseCase()
             _state.value = _state.value.copy(
                 restaurants = restaurants,
@@ -58,7 +61,7 @@ class RestaurantsViewModel @Inject constructor(
     }
 
     fun toggleFavorite(id: Int, oldValue: Boolean) {
-        viewModelScope.launch(handler) {
+        viewModelScope.launch(handler + dispatcher) {
             val updatedRestaurants = toggleRestaurantUseCase(id, oldValue)
             _state.value = _state.value.copy(
                 restaurants = updatedRestaurants

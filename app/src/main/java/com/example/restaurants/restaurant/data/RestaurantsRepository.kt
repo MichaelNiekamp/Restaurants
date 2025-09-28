@@ -3,15 +3,12 @@ package com.example.restaurants.restaurant.data
 import com.example.restaurants.restaurant.data.local.LocalRestaurant
 import com.example.restaurants.restaurant.data.local.PartialLocalRestaurant
 import com.example.restaurants.restaurant.data.remote.RestaurantsApiService
-import com.example.restaurants.RestaurantsApplication
+import com.example.restaurants.restaurant.data.di.IODispatcher
 import com.example.restaurants.restaurant.data.local.RestaurantsDaoInterface
-import com.example.restaurants.restaurant.data.local.RestaurantsDb
 import com.example.restaurants.restaurant.domain.Restaurant
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 import java.net.ConnectException
 import java.net.UnknownHostException
@@ -21,16 +18,17 @@ import javax.inject.Singleton
 @Singleton
 class RestaurantsRepository @Inject constructor(
     private val restInterface: RestaurantsApiService,
-    private val restaurantsDaoInterface: RestaurantsDaoInterface
+    private val restaurantsDaoInterface: RestaurantsDaoInterface,
+    @IODispatcher private val dispatcher: CoroutineDispatcher
 ) {
     suspend fun toggleFavoriteRestaurant(id: Int, value: Boolean) =
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             restaurantsDaoInterface.updateRestaurant(PartialLocalRestaurant(id, value))
         }
 
     suspend fun loadRestaurants() {
         Timber.tag("API").d("Fetching restaurants from API")
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             try {
                 refreshCache()
             } catch (e: Exception) {
@@ -67,7 +65,7 @@ class RestaurantsRepository @Inject constructor(
     }
 
     suspend fun getRestaurants() : List<Restaurant> {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             return@withContext restaurantsDaoInterface.getAllRestaurants().map {
                 Restaurant(
                     id = it.id,
